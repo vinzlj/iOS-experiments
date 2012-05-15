@@ -10,14 +10,14 @@
 
 @implementation KCPullableTabView
 
-- (id)initWithInnerView:(UIView *)innerView andTabView:(UIView *)tabView atPosition:(KCPosition)position
+- (id)initWithContentView:(UIView *)contentView andTabView:(UIView *)tabView atPosition:(KCPosition)position
 {
     // Define framesize.
     CGSize frameSize;
     if (position == KCPositionTop || position == KCPositionBottom)
-        frameSize = CGSizeMake(innerView.frame.size.width, innerView.frame.size.height + tabView.frame.size.height);
+        frameSize = CGSizeMake(contentView.frame.size.width, contentView.frame.size.height + tabView.frame.size.height);
     if (position == KCPositionLeft || position == KCPositionRight)
-        frameSize = CGSizeMake(innerView.frame.size.width + tabView.frame.size.width, innerView.frame.size.height);
+        frameSize = CGSizeMake(contentView.frame.size.width + tabView.frame.size.width, contentView.frame.size.height);
     
     // Define frame position.
     CGPoint framePosition;
@@ -38,7 +38,26 @@
     if (self) {
         self.backgroundColor = [UIColor greenColor];
         
-        [self addSubview:innerView];
+        // Shift views according to specified coordinates && position.
+        /*  if top: shift tabView at the bottom
+            if left: shift tabView on the right
+            if right: shift contentView on the right
+            if bottom: shift contentView to bottom
+         */
+        if (position == KCPositionTop)
+            tabView.frame = CGRectMake(tabView.frame.origin.x, contentView.frame.size.height, tabView.frame.size.width, tabView.frame.size.height);
+        if (position == KCPositionLeft)
+            tabView.frame = CGRectMake(contentView.frame.size.width, tabView.frame.origin.y, tabView.frame.size.width, tabView.frame.size.height);
+        if (position == KCPositionRight) {
+            contentView.frame = CGRectMake(tabView.frame.size.width, 0, contentView.frame.size.width, contentView.frame.size.height);
+            tabView.frame = CGRectMake(0, tabView.frame.origin.y, tabView.frame.size.width, tabView.frame.size.height);
+        }
+        if (position == KCPositionBottom) {
+            contentView.frame = CGRectMake(0, tabView.frame.size.height, contentView.frame.size.width, contentView.frame.size.height);
+            tabView.frame = CGRectMake(tabView.frame.origin.x, 0, tabView.frame.size.width, tabView.frame.size.height);
+        }            
+        
+        [self addSubview:contentView];
         [self addSubview:tabView];
     }
     return self;

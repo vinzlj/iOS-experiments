@@ -17,6 +17,6 @@ typedef enum {
 
 @interface KCPullableTabView : UIView
 
-- (id)initWithInnerView:(UIView *)innerView andTabView:(UIView *)tabView atPosition:(KCPosition)position;
+- (id)initWithContentView:(UIView *)contentView andTabView:(UIView *)tabView atPosition:(KCPosition)position;
 
 @end

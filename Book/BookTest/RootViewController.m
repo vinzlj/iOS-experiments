@@ -39,17 +39,20 @@
     KCObjectRotationView *objectRotationView = [[KCObjectRotationView alloc] initWithFrame:frame
                                                                           andImagesArray:imagesArray];
     
-    [self.view addSubview:objectRotationView];
+    ///[self.view addSubview:objectRotationView];
     
     /**
      * PullableTabView.
      **/
-    UIView *innerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 300)];
-    [innerView setBackgroundColor:[UIColor redColor]];
-    UIView *tabView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 300)];
+    [contentView setBackgroundColor:[UIColor redColor]];
+    UIView *tabView = [[UIView alloc] initWithFrame:CGRectMake(10, 10, 100, 100)];
     [tabView setBackgroundColor:[UIColor blueColor]];
     
-    KCPullableTabView *pullableTabView = [[KCPullableTabView alloc] initWithInnerView:innerView andTabView:tabView atPosition:KCPositionLeft];
+    KCPullableTabView *pullableTabView = [[KCPullableTabView alloc] initWithContentView:contentView 
+                                                                             andTabView:tabView 
+                                                                             atPosition:KCPositionBottom];
+    
     
     [self.view addSubview:pullableTabView];
 }
