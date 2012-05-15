@@ -8,6 +8,9 @@
 
 #import "KCPullableTabView.h"
 
+#define windowWidth 1024.0
+#define windowHeight 768.0
+
 @implementation KCPullableTabView
 
 - (id)initWithContentView:(UIView *)contentView andTabView:(UIView *)tabView atPosition:(KCPosition)position
@@ -23,22 +26,22 @@
     CGPoint framePosition;
     if (position == KCPositionTop || position == KCPositionBottom)
     {
-        framePosition.x = 512 - (frameSize.width / 2);
+        framePosition.x = (windowWidth / 2) - (frameSize.width / 2);
         if (position == KCPositionTop)      framePosition.y = 0;
-        if (position == KCPositionBottom)   framePosition.y = 768 - frameSize.height;
+        if (position == KCPositionBottom)   framePosition.y = windowHeight - frameSize.height;
     }
     if (position == KCPositionLeft || position == KCPositionRight)
     {
-        framePosition.y = 384 - (frameSize.height / 2);
+        framePosition.y = (windowHeight / 2) - (frameSize.height / 2);             /// BE CAREFUL WITH STATUS BAR -20px
         if (position == KCPositionLeft)     framePosition.x = 0;
-        if (position == KCPositionRight)    framePosition.x = 1024 - frameSize.width;
+        if (position == KCPositionRight)    framePosition.x = windowWidth - frameSize.width;
     }
     
     self = [super initWithFrame:CGRectMake(framePosition.x, framePosition.y, frameSize.width, frameSize.height)];
     if (self) {
         self.backgroundColor = [UIColor greenColor];
         
-        // Shift views according to specified coordinates && position.
+        // Shift views according to specified coordinates && positions.
         /*  if top: shift tabView at the bottom
             if left: shift tabView on the right
             if right: shift contentView on the right
@@ -57,8 +60,22 @@
             tabView.frame = CGRectMake(tabView.frame.origin.x, 0, tabView.frame.size.width, tabView.frame.size.height);
         }            
         
-        [self addSubview:contentView];
-        [self addSubview:tabView];
+        _contentView = contentView;
+        _tabView = tabView;
+        _position = position;
+        
+        [self addSubview:_contentView];
+        [self addSubview:_tabView];
+        
+        // Shift main view to hide contentView.
+        if (position == KCPositionTop)
+            self.frame = CGRectMake(self.frame.origin.x, -_contentView.frame.size.height, self.frame.size.width, self.frame.size.height);
+        if (position == KCPositionLeft)
+            self.frame = CGRectMake(-_contentView.frame.size.width, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+        if (position == KCPositionRight)
+            self.frame = CGRectMake(windowWidth - _tabView.frame.size.width, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+        if (position == KCPositionBottom)
+            self.frame = CGRectMake(self.frame.origin.x, windowHeight - _tabView.frame.size.height, self.frame.size.width, self.frame.size.height);
     }
     return self;
 }

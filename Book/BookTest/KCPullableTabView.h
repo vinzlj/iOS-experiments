@@ -15,7 +15,11 @@ typedef enum {
     KCPositionLeft
 } KCPosition;
 
-@interface KCPullableTabView : UIView
+@interface KCPullableTabView : UIView {
+    UIView *_contentView;
+    UIView *_tabView;
+    KCPosition _position;
+}
 
 - (id)initWithContentView:(UIView *)contentView andTabView:(UIView *)tabView atPosition:(KCPosition)position;
 
