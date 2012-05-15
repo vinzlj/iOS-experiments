@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BF67EE5A154BFB4D000283D9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF67EE59154BFB4D000283D9 /* QuartzCore.framework */; };
+		BF885ACF15621B8800605E1B /* KCPullableTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = BF885ACE15621B8800605E1B /* KCPullableTabView.m */; };
 		BF93BD681548799300CC697F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF93BD671548799300CC697F /* UIKit.framework */; };
 		BF93BD6A1548799300CC697F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF93BD691548799300CC697F /* Foundation.framework */; };
 		BF93BD6C1548799300CC697F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF93BD6B1548799300CC697F /* CoreGraphics.framework */; };
@@ -45,6 +46,8 @@
 
 /* Begin PBXFileReference section */
 		BF67EE59154BFB4D000283D9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		BF885ACD15621B8800605E1B /* KCPullableTabView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KCPullableTabView.h; sourceTree = "<group>"; };
+		BF885ACE15621B8800605E1B /* KCPullableTabView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KCPullableTabView.m; sourceTree = "<group>"; };
 		BF93BD631548799300CC697F /* BookTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF93BD671548799300CC697F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		BF93BD691548799300CC697F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -159,6 +162,8 @@
 			children = (
 				BF93BD85154886B800CC697F /* KCObjectRotationView.h */,
 				BF93BD86154886B800CC697F /* KCObjectRotationView.m */,
+				BF885ACD15621B8800605E1B /* KCPullableTabView.h */,
+				BF885ACE15621B8800605E1B /* KCPullableTabView.m */,
 			);
 			name = "Core Classes";
 			sourceTree = "<group>";
@@ -301,6 +306,7 @@
 				BF93BD781548799300CC697F /* AppDelegate.m in Sources */,
 				BF93BD7B1548799300CC697F /* RootViewController.m in Sources */,
 				BF93BD87154886B800CC697F /* KCObjectRotationView.m in Sources */,
+				BF885ACF15621B8800605E1B /* KCPullableTabView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

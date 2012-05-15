@@ -9,6 +9,7 @@
 #import "RootViewController.h"
 
 #import "KCObjectRotationView.h"
+#import "KCPullableTabView.h"
 
 @interface RootViewController ()
 
@@ -39,6 +40,18 @@
                                                                           andImagesArray:imagesArray];
     
     [self.view addSubview:objectRotationView];
+    
+    /**
+     * PullableTabView.
+     **/
+    UIView *innerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 300)];
+    [innerView setBackgroundColor:[UIColor redColor]];
+    UIView *tabView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    [tabView setBackgroundColor:[UIColor blueColor]];
+    
+    KCPullableTabView *pullableTabView = [[KCPullableTabView alloc] initWithInnerView:innerView andTabView:tabView atPosition:KCPositionLeft];
+    
+    [self.view addSubview:pullableTabView];
 }
 
 - (void)viewDidLoad
