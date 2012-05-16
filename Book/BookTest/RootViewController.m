@@ -51,7 +51,7 @@
     
     KCPullableTabView *pullableTabView = [[KCPullableTabView alloc] initWithContentView:contentView 
                                                                              andTabView:tabView 
-                                                                             atPosition:KCPositionBottom];
+                                                                             atPosition:KCPositionTop];
     
     
     [self.view addSubview:pullableTabView];

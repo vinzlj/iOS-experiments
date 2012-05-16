@@ -42,11 +42,6 @@
         self.backgroundColor = [UIColor greenColor];
         
         // Shift views according to specified coordinates && positions.
-        /*  if top: shift tabView at the bottom
-            if left: shift tabView on the right
-            if right: shift contentView on the right
-            if bottom: shift contentView to bottom
-         */
         if (position == KCPositionTop)
             tabView.frame = CGRectMake(tabView.frame.origin.x, contentView.frame.size.height, tabView.frame.size.width, tabView.frame.size.height);
         if (position == KCPositionLeft)
@@ -58,7 +53,7 @@
         if (position == KCPositionBottom) {
             contentView.frame = CGRectMake(0, tabView.frame.size.height, contentView.frame.size.width, contentView.frame.size.height);
             tabView.frame = CGRectMake(tabView.frame.origin.x, 0, tabView.frame.size.width, tabView.frame.size.height);
-        }            
+        }
         
         _contentView = contentView;
         _tabView = tabView;
@@ -68,16 +63,79 @@
         [self addSubview:_tabView];
         
         // Shift main view to hide contentView.
-        if (position == KCPositionTop)
+        if (position == KCPositionTop) {
             self.frame = CGRectMake(self.frame.origin.x, -_contentView.frame.size.height, self.frame.size.width, self.frame.size.height);
-        if (position == KCPositionLeft)
+            
+            minCenter = self.center.y;
+            maxCenter = _contentView.frame.size.height - _tabView.frame.size.height;
+        }
+        if (position == KCPositionLeft) {
             self.frame = CGRectMake(-_contentView.frame.size.width, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
-        if (position == KCPositionRight)
+        
+            minCenter = self.center.x;
+            maxCenter = _contentView.frame.size.width - _tabView.frame.size.width;
+        }
+        if (position == KCPositionRight) {
             self.frame = CGRectMake(windowWidth - _tabView.frame.size.width, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
-        if (position == KCPositionBottom)
+        
+            maxCenter = self.center.x;
+            minCenter = maxCenter - _contentView.frame.size.width;
+        }
+        if (position == KCPositionBottom) {
             self.frame = CGRectMake(self.frame.origin.x, windowHeight - _tabView.frame.size.height, self.frame.size.width, self.frame.size.height);
+        
+            maxCenter = self.center.y;
+            minCenter = maxCenter - _contentView.frame.size.height;
+        }
+        
+        
+        /* Gestures */
+        dragGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDragGesture:)];
+        [_tabView addGestureRecognizer:dragGestureRecognizer];
     }
     return self;
+}
+
+#pragma mark - Gestures handler
+
+- (void)handleDragGesture:(UIPanGestureRecognizer *)dragGesture
+{    
+    if (dragGesture.state == UIGestureRecognizerStateBegan)
+    {
+        NSLog(@"minCenter [%f]", minCenter);
+        NSLog(@"maxCenter [%f]", maxCenter);
+    }
+    else
+    if (dragGesture.state == UIGestureRecognizerStateChanged)
+    {
+        CGPoint touchTranslation = [dragGesture translationInView:self];
+        
+        // Calculate new center position.
+        CGFloat newCenter;
+        if (_position == KCPositionTop || _position == KCPositionBottom)
+            newCenter = self.center.y + touchTranslation.y;
+        if (_position == KCPositionLeft || _position == KCPositionRight)
+            newCenter = self.center.x + touchTranslation.x;
+        
+        // Check if in bounds.
+        if (newCenter >= minCenter &&
+            newCenter <= maxCenter)
+        {
+            if (_position == KCPositionTop || _position == KCPositionBottom)
+                self.center = CGPointMake(self.center.x, newCenter);
+            if (_position == KCPositionLeft || _position == KCPositionRight)
+                self.center = CGPointMake(newCenter, self.center.y);
+        }
+        
+        
+        [dragGesture setTranslation:CGPointZero inView:self];
+    }
+    else
+    if (dragGesture.state == UIGestureRecognizerStateEnded)
+    {
+        NSLog(@"newCenter [%f]", self.center.x);
+    }
+    
 }
 
 @end

@@ -15,10 +15,14 @@ typedef enum {
     KCPositionLeft
 } KCPosition;
 
-@interface KCPullableTabView : UIView {
+@interface KCPullableTabView : UIView <UIGestureRecognizerDelegate> {
     UIView *_contentView;
     UIView *_tabView;
     KCPosition _position;
+    
+    // Gestures.
+    UIPanGestureRecognizer *dragGestureRecognizer;
+    CGFloat minCenter, maxCenter;
 }
 
 - (id)initWithContentView:(UIView *)contentView andTabView:(UIView *)tabView atPosition:(KCPosition)position;
