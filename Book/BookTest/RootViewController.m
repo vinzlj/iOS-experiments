@@ -44,9 +44,9 @@
     /**
      * PullableTabView.
      **/
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 300)];
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1024, 153)];
     [contentView setBackgroundColor:[UIColor redColor]];
-    UIView *tabView = [[UIView alloc] initWithFrame:CGRectMake(10, 10, 100, 100)];
+    UIView *tabView = [[UIView alloc] initWithFrame:CGRectMake(462, 0, 100, 100)];
     [tabView setBackgroundColor:[UIColor blueColor]];
     
     KCPullableTabView *pullableTabView = [[KCPullableTabView alloc] initWithContentView:contentView 

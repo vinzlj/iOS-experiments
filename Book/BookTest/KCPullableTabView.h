@@ -22,7 +22,8 @@ typedef enum {
     
     // Gestures.
     UIPanGestureRecognizer *dragGestureRecognizer;
-    CGFloat minCenter, maxCenter;
+    CGFloat minCenter, maxCenter, newCenter;
+    BOOL tabState;
 }
 
 - (id)initWithContentView:(UIView *)contentView andTabView:(UIView *)tabView atPosition:(KCPosition)position;

@@ -11,6 +11,11 @@
 #define windowWidth 1024.0
 #define windowHeight 768.0
 
+#define kExpandAnimationDuration 0.5
+#define kSwipeTreshold 1000.0
+#define kTabStateRetracted 0
+#define kTabStateExpanded 1
+
 @implementation KCPullableTabView
 
 - (id)initWithContentView:(UIView *)contentView andTabView:(UIView *)tabView atPosition:(KCPosition)position
@@ -55,12 +60,14 @@
             tabView.frame = CGRectMake(tabView.frame.origin.x, 0, tabView.frame.size.width, tabView.frame.size.height);
         }
         
+        
         _contentView = contentView;
         _tabView = tabView;
         _position = position;
         
         [self addSubview:_contentView];
         [self addSubview:_tabView];
+        
         
         // Shift main view to hide contentView.
         if (position == KCPositionTop) {
@@ -92,6 +99,9 @@
         /* Gestures */
         dragGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDragGesture:)];
         [_tabView addGestureRecognizer:dragGestureRecognizer];
+        
+        /* Init */
+        tabState = kTabStateRetracted;
     }
     return self;
 }
@@ -102,8 +112,8 @@
 {    
     if (dragGesture.state == UIGestureRecognizerStateBegan)
     {
-        NSLog(@"minCenter [%f]", minCenter);
-        NSLog(@"maxCenter [%f]", maxCenter);
+        //NSLog(@"minCenter [%f]", minCenter);
+        //NSLog(@"maxCenter [%f]", maxCenter);
     }
     else
     if (dragGesture.state == UIGestureRecognizerStateChanged)
@@ -111,7 +121,6 @@
         CGPoint touchTranslation = [dragGesture translationInView:self];
         
         // Calculate new center position.
-        CGFloat newCenter;
         if (_position == KCPositionTop || _position == KCPositionBottom)
             newCenter = self.center.y + touchTranslation.y;
         if (_position == KCPositionLeft || _position == KCPositionRight)
@@ -127,15 +136,94 @@
                 self.center = CGPointMake(newCenter, self.center.y);
         }
         
-        
         [dragGesture setTranslation:CGPointZero inView:self];
     }
     else
     if (dragGesture.state == UIGestureRecognizerStateEnded)
     {
-        NSLog(@"newCenter [%f]", self.center.x);
+        
+        // Check if movement is fast enough to expand.
+        CGPoint velocity = [dragGesture velocityInView:self];
+        BOOL isFastEnough;
+        if (_position == KCPositionTop || _position == KCPositionBottom)
+            if (tabState == kTabStateRetracted) {
+                isFastEnough = (velocity.y > kSwipeTreshold);
+            } else {
+                isFastEnough = (velocity.y < -kSwipeTreshold);
+            }
+        if (_position == KCPositionLeft || _position == KCPositionRight)
+            if (tabState == kTabStateRetracted) {
+                isFastEnough = (velocity.x > kSwipeTreshold);
+            } else {
+                isFastEnough = (velocity.x < -kSwipeTreshold);
+            }
+        
+        NSLog(@"velocity [%f] fastEnough:%@", velocity.y, (isFastEnough) ? @"YES" : @"NO");
+        
+        // Sticky animation.
+        if (tabState == kTabStateRetracted) {
+            
+            if (newCenter > ((maxCenter - abs(minCenter)) / 2) || isFastEnough)
+            {
+                // Expand.
+                [UIView animateWithDuration:kExpandAnimationDuration
+                                 animations:^{
+                                     self.center = [self getEndingMaxPoint];
+                                     tabState = kTabStateExpanded;
+                                 }];
+            } else {
+                // Back to original place.
+                [UIView animateWithDuration:kExpandAnimationDuration
+                                 animations:^{
+                                     self.center = [self getEndingMinPoint];
+                                 }];
+            }
+        } 
+        else
+            
+        if (tabState == kTabStateExpanded) {
+                
+            if (newCenter < ((maxCenter - abs(minCenter)) / 2) || isFastEnough) {
+                // Expand.
+                [UIView animateWithDuration:kExpandAnimationDuration
+                                 animations:^{
+                                     self.center = [self getEndingMinPoint];
+                                     tabState = kTabStateRetracted;
+                                 }];
+            } else {
+                // Back to original place.
+                [UIView animateWithDuration:kExpandAnimationDuration
+                                 animations:^{
+                                     self.center = [self getEndingMaxPoint];
+                                 }];
+            }
+        }
     }
     
+}
+
+- (CGPoint)getEndingMinPoint
+{
+    CGPoint endingPoint;
+    
+    if (_position == KCPositionTop || _position == KCPositionBottom)
+        endingPoint = CGPointMake(self.center.x, minCenter);
+    if (_position == KCPositionLeft || _position == KCPositionRight)
+        endingPoint = CGPointMake(minCenter, self.center.y);
+    
+    return endingPoint;
+} 
+
+- (CGPoint)getEndingMaxPoint 
+{
+    CGPoint endingPoint;
+    
+    if (_position == KCPositionTop || _position == KCPositionBottom)
+        endingPoint = CGPointMake(self.center.x, maxCenter);
+    if (_position == KCPositionLeft || _position == KCPositionRight)
+        endingPoint = CGPointMake(maxCenter, self.center.y);
+        
+    return endingPoint;
 }
 
 @end
