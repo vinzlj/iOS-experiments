@@ -37,7 +37,7 @@
     CGRect frame = CGRectMake(352, 264, 320, 240);
     
     KCObjectRotationView *objectRotationView = [[KCObjectRotationView alloc] initWithFrame:frame
-                                                                          andImagesArray:imagesArray];
+                                                                            andImagesArray:imagesArray];
     
     ///[self.view addSubview:objectRotationView];
     

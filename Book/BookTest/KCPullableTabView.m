@@ -72,27 +72,28 @@
         // Shift main view to hide contentView.
         if (position == KCPositionTop) {
             self.frame = CGRectMake(self.frame.origin.x, -_contentView.frame.size.height, self.frame.size.width, self.frame.size.height);
-            
+
             minCenter = self.center.y;
-            maxCenter = _contentView.frame.size.height - _tabView.frame.size.height;
+            maxCenter = self.frame.size.height / 2;
         }
         if (position == KCPositionLeft) {
             self.frame = CGRectMake(-_contentView.frame.size.width, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
         
             minCenter = self.center.x;
-            maxCenter = _contentView.frame.size.width - _tabView.frame.size.width;
+            maxCenter = self.frame.size.width / 2;
         }
         if (position == KCPositionRight) {
             self.frame = CGRectMake(windowWidth - _tabView.frame.size.width, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
         
             maxCenter = self.center.x;
-            minCenter = maxCenter - _contentView.frame.size.width;
+            minCenter = windowWidth - (self.frame.size.width / 2);
         }
         if (position == KCPositionBottom) {
             self.frame = CGRectMake(self.frame.origin.x, windowHeight - _tabView.frame.size.height, self.frame.size.width, self.frame.size.height);
         
             maxCenter = self.center.y;
-            minCenter = maxCenter - _contentView.frame.size.height;
+            minCenter = windowHeight - (self.frame.size.height / 2);
+            NSLog(@"%f - %f (%f)", minCenter, maxCenter, self.frame.size.height);
         }
         
         
@@ -135,6 +136,7 @@
             if (_position == KCPositionLeft || _position == KCPositionRight)
                 self.center = CGPointMake(newCenter, self.center.y);
         }
+        NSLog(@"self.center.y: %f", self.center.y);
         
         [dragGesture setTranslation:CGPointZero inView:self];
     }
@@ -162,20 +164,30 @@
         
         // Sticky animation.
         if (tabState == kTabStateRetracted) {
-            
+
             if (newCenter > ((maxCenter - abs(minCenter)) / 2) || isFastEnough)
             {
                 // Expand.
                 [UIView animateWithDuration:kExpandAnimationDuration
                                  animations:^{
-                                     self.center = [self getEndingMaxPoint];
+                                     if (_position == KCPositionTop || _position == KCPositionLeft)
+                                     {
+                                         self.center = [self getEndingMaxPoint];
+                                     } else {
+                                         self.center = [self getEndingMinPoint];
+                                     }
                                      tabState = kTabStateExpanded;
                                  }];
             } else {
                 // Back to original place.
                 [UIView animateWithDuration:kExpandAnimationDuration
                                  animations:^{
-                                     self.center = [self getEndingMinPoint];
+                                     if (_position == KCPositionTop || _position == KCPositionLeft)
+                                     {
+                                         self.center = [self getEndingMaxPoint];
+                                     } else {
+                                         self.center = [self getEndingMinPoint];
+                                     }
                                  }];
             }
         } 
@@ -222,7 +234,7 @@
         endingPoint = CGPointMake(self.center.x, maxCenter);
     if (_position == KCPositionLeft || _position == KCPositionRight)
         endingPoint = CGPointMake(maxCenter, self.center.y);
-        
+
     return endingPoint;
 }
 
